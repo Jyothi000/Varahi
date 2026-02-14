@@ -26,6 +26,44 @@ const backToHomeBtn = document.getElementById("backToHomeBtn");
 const submissionDetails = document.getElementById("submissionDetails");
 const closeSuccessBtn = document.getElementById('closeSuccessBtn');
 const backToHomeFromDocBtn = document.getElementById('backToHomeFromDocBtn');
+const availableUnitsDisplay = document.getElementById('availableUnitsDisplay');
+
+// Available units management
+const INITIAL_AVAILABLE_UNITS = 196031;
+
+function getAvailableUnits() {
+  const stored = sessionStorage.getItem('availableUnits');
+  return stored ? parseInt(stored, 10) : INITIAL_AVAILABLE_UNITS;
+}
+
+function setAvailableUnits(units) {
+  sessionStorage.setItem('availableUnits', units.toString());
+}
+
+function updateAvailableUnitsDisplay() {
+  if (availableUnitsDisplay) {
+    const units = getAvailableUnits();
+    availableUnitsDisplay.textContent = `Available units: ${units.toLocaleString('en-IN')} units`;
+  }
+}
+
+function subtractUnits(amount) {
+  const current = getAvailableUnits();
+  const newTotal = current - amount;
+  setAvailableUnits(newTotal);
+  updateAvailableUnitsDisplay();
+  return newTotal;
+}
+
+function resetAvailableUnits() {
+  sessionStorage.removeItem('availableUnits');
+  updateAvailableUnitsDisplay();
+}
+
+// Initialize available units display on transfer page
+if (currentPage === 'transfer.html') {
+  updateAvailableUnitsDisplay();
+}
 
 // Custom Alert Function
 function showAlert(message) {
@@ -85,6 +123,7 @@ function setLoggedIn(value) {
     sessionStorage.setItem("isLoggedIn", "true");
   } else {
     sessionStorage.removeItem("isLoggedIn");
+    resetAvailableUnits(); // Reset available units on logout
   }
 }
 
@@ -279,6 +318,20 @@ transferForm?.addEventListener('submit', (e) => {
     return;
   }
   
+  // Validate units against available units
+  const requestedUnits = parseInt(formData.units, 10);
+  const availableUnits = getAvailableUnits();
+  
+  if (isNaN(requestedUnits) || requestedUnits <= 0) {
+    showAlert('Please enter a valid number of units');
+    return;
+  }
+  
+  if (requestedUnits > availableUnits) {
+    showAlert(`Insufficient units! You only have ${availableUnits.toLocaleString('en-IN')} units available. Please enter a smaller amount.`);
+    return;
+  }
+  
   // If all validations pass, redirect to success.html after 5 seconds
   try {
     // Hide the form
@@ -289,6 +342,10 @@ transferForm?.addEventListener('submit', (e) => {
     
     // Persist data for success page
     sessionStorage.setItem('transferSubmission', JSON.stringify(formData));
+    
+    // Subtract the units from available units
+    const remainingUnits = subtractUnits(requestedUnits);
+    console.log(`Successfully transferred ${requestedUnits} units. Remaining: ${remainingUnits}`);
 
     // Wait 5 seconds before redirecting to success page
     setTimeout(() => {
@@ -330,6 +387,9 @@ if (submissionDetails) {
   }
 
   if (data) {
+    const transferredUnits = parseInt(data.units, 10);
+    const remainingUnits = getAvailableUnits();
+    
     submissionDetails.innerHTML = `
       <p><strong>C-KYC Number:</strong> ${data.ckycNo ?? ''}</p>
       <p><strong>Donation Number:</strong> ${data.donateNo ?? ''}</p>
@@ -338,7 +398,8 @@ if (submissionDetails) {
       <p><strong>PAN Number:</strong> ${data.panNo ?? ''}</p>
       <p><strong>Address:</strong> ${data.address ?? ''}</p>
       <p><strong>Pin Code:</strong> ${data.pinCode ?? ''}</p>
-      <p><strong>Units to Share:</strong> ${data.units ?? ''}</p>
+      <p><strong>Units Transferred:</strong> ${transferredUnits.toLocaleString('en-IN')}</p>
+      <p><strong>Remaining Units:</strong> ${remainingUnits.toLocaleString('en-IN')}</p>
     `;
   }
 }
