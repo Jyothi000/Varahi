@@ -417,7 +417,7 @@ withdrawalBtn?.addEventListener('click', () => {
       <div class="error-animation">
         <div class="wrong-mark">✕</div>
       </div>
-      <h3>Sorry, you don't have access to perform this operation</h3>
+      <h3>Sorry, you are not eligible for withdrawal due to pending income tax dues.</h3>
     </div>
   `;
   
