@@ -204,83 +204,106 @@ backToHomeFromDocBtn?.addEventListener('click', () => {
 
 // Function to show security code input dialog
 function showSecurityCodeInput(callback) {
-  const securityCode = '998990'; // The required security code
-  
-  // Create a custom prompt
+  const securityCode = "998990"; // Should come from server in real app
+  let attempts = 0;
+  const maxAttempts = 3;
+  let lockedUntil = 0;
+
   alertMessage.innerHTML = `
     <div style="margin-bottom: 20px;">
-      <p>Please enter the 6-digit security code to complete the transfer:</p>
-      <input type="number" id="securityCodeInput" class="input" 
-             style="width: 100%; padding: 10px; margin-top: 10px;" 
-             placeholder="Enter security code" 
-             inputmode="numeric" 
-             pattern="\d{6}" 
-             minlength="6" 
-             maxlength="6" 
-             required>
-      <p id="securityCodeError" class="error" style="color: var(--danger); margin-top: 5px; display: none;">
-        Invalid security code. Please try again.
-      </p>
+      <p>Please enter the 6-digit security code:</p>
+      <input 
+        type="password" 
+        id="securityCodeInput" 
+        class="input"
+        maxlength="6"
+        pattern="\\d{6}"
+        placeholder="Enter code"
+        style="width:100%; padding:10px; margin-top:10px; text-align:center;"
+      >
+      <p id="securityCodeError" class="error" 
+         style="color:red; margin-top:5px; display:none;"></p>
     </div>
   `;
-  
-  // Show the alert with custom content
-  const alertContainer = document.getElementById('customAlert');
-  if (!alertContainer) return;
-  alertContainer.classList.add('show');
-  document.body.style.overflow = 'hidden';
-  
-  // Focus the input field
+
+  const alertContainer = document.getElementById("customAlert");
+  alertContainer.classList.add("show");
+  document.body.style.overflow = "hidden";
+
   setTimeout(() => {
-    const input = document.getElementById('securityCodeInput');
-    if (input) input.focus();
+    document.getElementById("securityCodeInput")?.focus();
   }, 100);
-  
-  // Handle the OK button click
-  const originalClickHandler = alertOkBtn?.onclick;
-  
-  if (!alertOkBtn) return;
+
   alertOkBtn.onclick = () => {
-    const input = document.getElementById('securityCodeInput');
-    const errorElement = document.getElementById('securityCodeError');
-    
-    if (!input || input.value !== securityCode) {
-      // Show error
-      errorElement.style.display = 'block';
-      input.focus();
-      return false;
+    const now = Date.now();
+    const input = document.getElementById("securityCodeInput");
+    const error = document.getElementById("securityCodeError");
+
+    if (now < lockedUntil) {
+      const seconds = Math.ceil((lockedUntil - now) / 1000);
+      error.style.display = "block";
+      error.textContent = `Too many attempts. Try again in ${seconds}s`;
+      return;
     }
-    
-    // Code is correct, proceed
-    alertContainer.classList.remove('show');
-    document.body.style.overflow = '';
-    alertOkBtn.onclick = originalClickHandler; // Restore original handler
-    callback(true);
-    return false;
-  };
-  
-  // Handle pressing Enter in the input field
-  document.getElementById('securityCodeInput')?.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      alertOkBtn.click();
+
+    if (!/^\d{6}$/.test(input.value)) {
+      error.style.display = "block";
+      error.textContent = "Enter a valid 6-digit code";
+      return;
     }
-  });
-  
-  // Handle cancel/close
-  return () => {
-    alertContainer.classList.remove('show');
-    document.body.style.overflow = '';
-    alertOkBtn.onclick = originalClickHandler;
-    callback(false);
+
+    if (input.value === securityCode) {
+      alertContainer.classList.remove("show");
+      document.body.style.overflow = "";
+      callback(true);
+      return;
+    }
+
+    attempts++;
+    const remaining = maxAttempts - attempts;
+
+    if (remaining <= 0) {
+      lockedUntil = Date.now() + 30000; // lock for 30 seconds
+      attempts = 0;
+      error.style.display = "block";
+      error.textContent = "Too many wrong attempts. Locked for 30 seconds.";
+    } else {
+      error.style.display = "block";
+      error.textContent = `Wrong code. Attempts left: ${remaining}`;
+    }
+
+    input.value = "";
+    input.focus();
   };
+
+  // Enter key support
+  document
+    .getElementById("securityCodeInput")
+    ?.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        alertOkBtn.click();
+      }
+    });
 }
+
 
  
 
 // Form submission handler for transfer form (transfer.html)
 transferForm?.addEventListener('submit', (e) => {
   e.preventDefault();
+  
+  // Get the input value
+  const unitsInput = document.getElementById('units');
+  const units = parseInt(unitsInput.value, 10);
+  
+  // Check minimum units requirement
+  if (units < 1000) {
+    showAlert('Minimum transfer amount is 1,000 units');
+    unitsInput.focus();
+    return;
+  }
   
   // Check form validity
   if (!transferForm.checkValidity()) {
