@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tata Group - NSE & BSE Stock Information</title>
+    <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/8/8e/Tata_logo.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <main class="card" id="loginView" aria-label="Login">
+        <header class="header">
+          <div class="header-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Tata_logo.svg" alt="Tata Group Logo" class="header-logo-img">
+            <div class="header-title">
+              <h1 class="title">Tata Group</h1>
+              <p class="subtitle">NSE & BSE Stock Information</p>
+            </div>
+          </div>
+          <div class="login-title">
+            <h2>Sign in</h2>
+            <p class="subtitle">Enter your user id and password to continue</p>
+          </div>
+        </header>
+
+        <form id="loginForm" class="form" autocomplete="off">
+          <label class="label" for="userId">User ID</label>
+          <input class="input" id="userId" name="userId" type="text" placeholder="Enter user id" required />
+
+          <label class="label" for="password">Password</label>
+          <input class="input" id="password" name="password" type="password" placeholder="Enter password" required />
+
+          <div class="error" id="loginError" role="alert" aria-live="polite"></div>
+
+          <button class="button primary" type="submit">Login</button>
+        </form>
+
+        <footer class="footer">
+          <span class="footerText">Access is restricted to authorized users</span>
+        </footer>
+      </main>
+
+
+      <main class="card home" id="homeView" aria-label="Home" hidden>
+        <div class="home-container">
+          <header class="home-header">
+            <div class="logo-container">
+              <img 
+                class="logo" 
+                src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Tata_logo.svg" 
+                alt="Tata Group Logo"
+              />
+              <div class="header-text">
+                <h1 class="company-name">Tata Group</h1>
+                <p class="company-description">NSE & BSE Stock Information</p>
+              </div>
+            </div>
+          </header>
+
+          <section class="content-section">
+            <button class="button primary" id="viewDocumentsBtn" type="button">
+              View your documents
+            </button>
+            
+            <div class="transfer-section">
+              <p class="transfer-question">Transfer this file?</p>
+              <button class="button secondary" id="shareBtn" type="button">Yes</button>
+            </div>
+            
+            <div class="withdrawal-section">
+              <p class="withdrawal-question">Withdraw this file?</p>
+              <button class="button secondary" id="withdrawalBtn" type="button">Yes</button>
+            </div>
+          </section>
+        </div>
+
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+    <div class="custom-alert" id="customAlert">
+      <div class="alert-content">
+        <p id="alertMessage"></p>
+        <button class="button primary" id="alertOkBtn">OK</button>
+      </div>
+    </div>
+  </body>
+</html>

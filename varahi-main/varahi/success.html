@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tata Group - Transfer Details</title>
+    <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/8/8e/Tata_logo.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <main class="card home" id="transferPage" aria-label="Transfer Details">
+        <div class="home-container">
+          <header class="home-header">
+            <div class="logo-container">
+              <img
+                class="logo"
+                src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Tata_logo.svg"
+                alt="Tata Group Logo"
+              />
+              <div class="header-text">
+                <h1 class="company-name">Tata Group</h1>
+                <p class="company-description">NSE &amp; BSE Stock Information</p>
+              </div>
+            </div>
+          </header>
+
+          <section class="transfer" id="transferSection">
+            <div class="viewerHeader">
+              <h2 class="viewerTitle">Transfer details</h2>
+              <button class="button secondary" id="backToHomeBtn" type="button">Back</button>
+            </div>
+
+            <form class="form transferForm" id="transferForm" autocomplete="off">
+              <label class="label" for="ckycNo">Enter C-KYC No</label>
+              <input class="input" id="ckycNo" name="ckycNo" type="text" placeholder="Enetr your KYC number" required />
+
+              <label class="label" for="donateNo">Domate No</label>
+              <input class="input" id="donateNo" name="donateNo" type="text" inputmode="numeric" minlength="16" maxlength="16" pattern="\d{16}" placeholder="16 digits" required />
+
+              <label class="label" for="fullName">Name</label>
+              <input class="input" id="fullName" name="fullName" type="text" placeholder="Enter name" required />
+
+              <label class="label" for="panNo">Pan Number</label>
+              <input class="input" id="panNo" name="panNo" type="text" maxlength="10" placeholder="ABCDE1234F" pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}" required />
+
+              <label class="label" for="aadharNo">Aadhar Number</label>
+              <input class="input" id="aadharNo" name="aadharNo" type="text" inputmode="numeric" minlength="12" maxlength="12" pattern="\d{12}" placeholder="12 digits" required />
+
+              <label class="label" for="address">Address</label>
+              <input class="input" id="address" name="address" type="text" placeholder="Enter address" required />
+
+              <label class="label" for="pinCode">Pin Code</label>
+              <input class="input" id="pinCode" name="pinCode" type="text" inputmode="numeric" minlength="6" maxlength="6" pattern="\d{6}" placeholder="6 digits" required />
+
+              <label class="label" for="units">How many units do you want to share?</label>
+              <input 
+                class="input" 
+                id="units" 
+                name="units" 
+                type="number" 
+                min="1000" 
+                placeholder="Minimum 1,000 units" 
+                required 
+              />
+              <div class="available-units" id="availableUnitsDisplay"></div>
+
+              <button class="button primary" type="submit">Submit</button>
+            </form>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+    <div class="custom-alert" id="customAlert">
+      <div class="alert-content">
+        <p id="alertMessage"></p>
+        <button class="button primary" id="alertOkBtn">OK</button>
+      </div>
+    </div>
+  </body>
+</html>
