@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tata Group - Transfer Details</title>
+    <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/8/8e/Tata_logo.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <main class="card home" id="transferPage" aria-label="Transfer Details">
+        <div class="home-container">
+          <section class="transfer success-page" id="transferSection">
+            <div class="success-message">
+              <div class="success-animation">
+                <div class="checkmark">✓</div>
+              </div>
+              <h3>Successfully Submitted!</h3>
+              <p>The post will be delivered to the below-mentioned address within a short period of time.</p>
+            </div>
+
+            <div class="submission-details" id="submissionDetails">
+              <!-- Transfer details will be populated here by JavaScript -->
+            </div>
+
+            <div class="action-buttons">
+              <button class="button primary" id="closeSuccessBtn">Back to Home</button>
+            </div>
+
+            <form class="form transferForm" id="transferForm" autocomplete="off" style="display: none;">
+              <!-- Hidden form - only used for JavaScript processing -->
+            </form>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+    <div class="custom-alert" id="customAlert">
+      <div class="alert-content">
+        <p id="alertMessage"></p>
+        <button class="button primary" id="alertOkBtn">OK</button>
+      </div>
+    </div>
+  </body>
+</html>
